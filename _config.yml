@@ -26,9 +26,9 @@ social:
     - icon: fa-github
       link: "https://github.com/ShinJQ"
 
-share:
-  twitter_username:
-  fb_appid: 
+#share:
+  #twitter_username:
+  #fb_appid:
 
 urls:
     - text: About Me
