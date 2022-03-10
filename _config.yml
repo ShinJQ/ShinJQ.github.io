@@ -1,10 +1,10 @@
-title: Stack Problems
-description: My Personal Stack Problems
-author: Agus Makmun
-github: https://github.com/agusmakmun
-about: I'm Programmer for Python & Django. I've made quite a few web apps, especially on Django.
-disqus_shortname: stackproblems
-google_analytics: UA-XXXXXXXX-Y
+title: Computer Vision
+description: Simple explanation about papers I've read
+author: JungKyoo Shin
+github: https://github.com/ShinJQ
+about: I am a graduate student interested in computer vision.
+disqus_shortname: 
+google_analytics: 
 
 enableTags: true
 tagarray: []
@@ -27,8 +27,8 @@ social:
       link: "https://github.com/agusmakmun"
 
 share:
-  twitter_username: github.io
-  fb_appid: 1749788565247320
+  twitter_username:
+  fb_appid: 
 
 urls:
     - text: About Me
@@ -38,7 +38,7 @@ urls:
     - text: XML Feed
       url: /feed.xml
 
-url: "https://agusmakmun.github.io"
+url: 
 baseurl: ""
 paginate: 20
 per_page: 20
