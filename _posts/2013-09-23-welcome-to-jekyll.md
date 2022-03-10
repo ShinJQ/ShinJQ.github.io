@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "How to custom select language icon in django administration"
+title:  "HHow to custom select language icon in django administration"
 date:   2020-07-28 20:25:28 +0700
 categories: [python, django]
 ---
