@@ -1,0 +1,19 @@
+---
+layout: post
+title:  "HERO: Hierarchical Encoder for Video+Language Omni-representation Pre-training"
+date:   2022-03-10 20:25:28 +0700
+categories: [Video_understanding]
+---
+From ENLMP 2020
+
+
+**1. Basic Concept**
+
+
+**2. Methods in detail.**
+![HERO_Fig1.png](./_data/HERO_Fig1.png)
+
+**3. Results Overview**
+
+
+
