@@ -3,7 +3,7 @@
 layout: post
 title:  "HERO: Hierarchical Encoder"
 date: 2022-07-25 19:51:02 +0700
-categories: [python]
+categories: [CVPR22]
 ---
 
 [주소에 대한 설명](http://www.google.co.kr)
