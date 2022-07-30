@@ -8,9 +8,6 @@ categories: [CVPR22]
 [Paper](https://arxiv.org/abs/2112.09583)
 [Code](https://github.com/salesforce/ALPRO)
 
-
-비디오 좋아좋아좋아
-
 **1. Concept :**
 
 ***Field : Video_Language Pre-training ***
@@ -124,4 +121,5 @@ PEM이 과연 정말 좋은 것일까..?
 의외로 명사 하나를 쓰는 것 보다, 비디오를 구성하는 것이 더 효과가 좋다!!
 그러면 아예 그냥 "A video of dog","A video of girl" 같은 형식으로 문장을 구성하지 말고, 아예 Dog 의 위키피디아 정의를 paragraph embedding으로 갖다박는것도 재밌지 않았을까?
 흠...
+
 ![Exp_resutls](/img/Prompt/ens_abl.png)
