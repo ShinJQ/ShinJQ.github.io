@@ -1,17 +1,127 @@
 ---
 layout: post
-title:  "HERO: Hierarchical Encoder"
-date: 2022-07-25 19:51:02 +0700
+title:  "Align and Prompt: Video-and-Language Pre-training with Entity Prompts"
+date: 2022-07-26 19:51:02 +0700
 categories: [CVPR22]
 ---
 
-[주소에 대한 설명](http://www.google.co.kr)
+[Paper](https://arxiv.org/abs/2112.09583)
+[Code](https://github.com/salesforce/ALPRO)
+
+
+비디오 좋아좋아좋아
 
 **1. Concept :**
 
+***Field : Video_Language Pre-training ***
+비디오는 너무나도 복잡한 정보들로 구성되어 있기에, 이걸 학습하는것도 매우 어렵긴 한데.. 학습한 사실을 표현하는 것 또한 큰 문제로 자리잡았다.
+비디오 안에 내재되어 있을 법한 정보들이 너무나도 다양한데, 기존의 분류나 회귀같은 Numeric 한 methods 들은 이를 표현해내기엔 너무 부족하기 때문.
+
+드라마의 한 장면만 단순하게 생각해도 배경에 대한 정보, 등장하는 사람이나 그 사람이 들고 있는 물건, 입고 있는 옷 등의 상호작용에 따라 내용이 완전히 바뀔 수 있는 것이 비디오 내의 "맥락"정보이기에, 기존의 방법과는 조금 다르게 더 자유롭게 표현할 수 있는 Task 가 필요했다.
+
+그래서 등장한 것이 바로 Multi-modality. 
+여러 단어의 조합을 통해 수 많은 의미를 생성해내는 자연어 영억 또한 비슷한 문제를 갖고 있기 때문에, 차라리 복잡한 data 두 개를 상호작용 시키면 서로의 의미를 잘 표현할 수 있을 것이란 아이디어로 등장한 영역이다.
+
+Video-Language 의 Multi-modality 관련 Task 는 총 3가지로 나눌 수 있다.
+1. 비디오에 어떤 정보가 내재되어있는지를 언어로 표현하는 Video Captioning. 
+2. 비디오로 어떤 정보를 알 수 있는지를 묻는 Video Question&Answering.
+3. 비디오에 어떤 정보가 존재하는지를 알 수 있는 Video Retrieval.
+
+3개의 Task 가 각기 다른 형태고, 조금씩 다른 정보를 요구하지만 결국 비디오를 "잘" 이해하면 된다는 점은 같다. 
+즉, 비디오를 잘 이해하는 model을 통해 video 의 feature 을 추출하면 비디오의 맥락에 대한 이해를 요구하는 여러 task에서도 좋은 결과를 보일 것이라는 아이디어가 Video-Language pre-training 의 시발점이다.
+
+
+구체적으로 비디오를 Raw-format 에서 feature 로 변환하기 위한 모델을 아주 거대한 dataset으로 학습시키고, 학습된 parameter을 기반으로, 즉 initial parameter로 사용하여 각 task 에 맞춰 다시 학습하는 개념이다. 이때, 거대한 dataset으로 학습할 때 학습 목적이 되는 task를 "proxy task"라고 이름지으며, 이 task의 의미는 model이 비디오의 의미를 이해하는 것에 전적으로 맞춰져있다. 
+즉 Pre-training 에서 목적으로 하는 task의 performance는 추상적인 것으로, 실용적인 의미가 하나도 없지만 결국 맥락을 이해하는데 좋은 que를 줄 수 있기만 하면 오케이라는 것입니다.
+
+***Paper : Align and Prompt : 신박한 Proxy task 가 다 했다***
+이 저자가 문제점으로 잡은 개념은 비디오와 매칭되는 언어가 정확하게 일치하지 않는다는 것이다. 언어가 명시하는 프레임들에 대해, 배경에 대한 정보들이 빠져있을 수도 있다. 또한 프레임의 정보가 언어 중 일부분만 담고 있을 수 있다.
+그렇기에 그냥 무턱대고 비디오와 언어를 같은 Latent space 로 때려박아서 거리를 비교하는 방식의 연구는 Visual inference que 가 잘못된 방향으로 나아갔을 수 있다는 것이 핵심이다.
+비디오 중 어떤 특정 영역이 어떤 언어와 일치한단 정보가 매우 중요하다고 저자는 보았으며, 심지어 이에 L. Zhu 가 CVPR20 에 발표한 ACTBERT같은 경우는 비디오 중 어떤 영역이 언어와 일치하는지 알기 위해 off-the-shelf 형태의 Object detection model 을 따로 떼어와서 하나하나 학습시켰다고 한다.
+사실 이건 보기만 해도 computational overhead 가 정말 끔찍하게 늘어나는 복잡한 형태며...더 큰 문제는, 일반적인 Object detection task 는 Object를 detect 하고 그 object 가 무엇인지 classification 까지 하는 것이 한 task인데, 이 classification에 주어진 label 의 수가 매우 제한적이라는 것이다.
+수십개 내지 수백개 정도인 label은 수십만가지를 표현할 수 있는 language vocabulary 와 비교했을 땐 표현력이 매우 낮으며, 이는 video 에서 pre-training 하기에 부적합한 정보들을 잡아낼 수도 있다.
+
+그래서 이 논문은 아예 Self-supervised 형태로 각 object 에 대한 pseudo-label을 생성하고, 이를 기반으로 학습하는 방법을 제안한 것이 핵심 contribution으로 볼 수 있다.
+![concept](/img/Prompt/concept.png)
 
 **2. Methods in detail :**
 
-![Fig1](/img/hero/Fig1.png)
+아래는 논문이 제시한 모델의 전체적인 figure이다. 
+![total_figure](/img/Prompt/total.png)
+
+이 논문은 새로운 Proxy task를 제시하는것이 핵심이기에, 모델에 대한 설명과 4개의 Loss 에 대한 설명으로 나눌 수 있다.
+
+
+***2 independent model ***
+
+이 모델은 2개의 독립적인 모델로 구성되어 있다.
+메인 모델은 비디오를 직접 이해하고 자연어와의 관계를 학습할 Video-language pre-training model 이며, 다른 하나는 메인 모델에게 정보를 제공하기 위해 Pseudo-label, 즉 가상의 라벨링을 하기 위한 Prompter 모델이다.
+두 모델의 형태는 거의 비슷하지만, 디테일이 조금 다르다!
+
+메인 모델부터 설명하도록 하겠다.
+이해를 쉽게 하기 위해서, 10초짜리 비디오와 "a cute girl walks a dog in the park"을 이해한다고 가정하자.
+
+먼저 비디오부터 보면, 비디오 내의 정보는 sparse 하다는 naive 한 가정을 깔고 간다. 즉, 다양한 길이의 비디오에 대해 N개의 프레임만 추출하여 사용해도 좋은 성능을 보일 것이라는 가정을 깔고, 10초짜리 비디오에서 한정된 N개의 프레임만을 뽑아간다.
+사실 이건 현실의 비디오들이 정말 다양한 호흡의 Temporal information 을 가진다는 사실을 생각했을 때 조금 아쉬운 접근방법이라고 생각하지만 최근 transformer이 유행하니...
+이후 추출한 frame들에 대해 각 frame을 곂치지 않는 p 개의 patch로 분할하며, 추가적으로 텅 비어있는 [cls token]을 합친다. 
+이후 여기서 나온 정보들에 대해 MLP에 feed 한 다음  [TimeSformer](https://arxiv.org/abs/2102.05095)를 사용하여 비디오 내의 spatio-temporal information, 즉 맥락에 대해 이해한다.
+맥락에 대해 이해되었다고 가정할 수 있는 feature의 형태는 ({number_of_frame+1((cls)} * number_of_patches * hidden_dimension) 이 되는데, 이후 feature의 size를 맞춰주기 위해 mean-pooling 을 해준다.
+그렇게 되면, 비디오의 맥락을 이해하여 특성을 담고 있다고 가정한 feature 은 (number_of_patches * hidden_dimension) 이 된다.
+
+다음, 자연어의 input은 T개의 단어들로 구성된 sentence이다. 
+이 sentence 는 먼저 학습된 BERT 모델에 feed 된다. 사실 요즘 glove model 이 안 쓰이고 바로 자연어-embedding-bert-feature 이 되는 과정이 매우 신기하다..심지어 BERT 의 cls token 의 feature을 기반으로 sentence embedding 이 되었다고 가정하는 경우도 많으니, 겨우 768개의 cls feature 이 그 많고 다양한 정보를 담고 있을 수 있긴 한걸까 궁금증이 든다.
+그러나 아무튼 요번 논문의 경우, 자연어 처리에서 CLS token을 쓰진 않고 모든 output feature을 다 사용하니, 결국 feature 의 형태는 (number_of_words * hidden dimension ) 이 된다.
+
+이후, 자연어와 비디오를 대응시키며 관계를 이해하기 위해 위에 비디오를 이해할 때 사용했던 형태의 TimeSformer을 한개 더 만들어 multi-modal encoder로 정의한다.
+이 multi-modal encoder에 들어갈 input은 simple하게 Video 와 Sentence 의 output feature을 단순히 concatenate 시킨 feature이다.
+사실 multi-modality에서는 video 와 sentence 의 feature을 서로 interact시키는 과정이 매우 중요한데, 올해 2022년 cvpr에선 유독 단순하게 concatenate 시킨 후 transformer에 feed 시키는 과정이 늘어나고 있다..
+
+아무튼 이렇게 ({number_of_patches + number_of_words} * Hidden_dimenstion) 을 input으로 넣고, 해당 사이즈랑 똑같은 feature 을 output으로 얻으며, 이게 main model 의 전부이다.
+
+
+Prompter 은 조금 더 간단하다, Video 와 Sentence 를 이해하는 Multi-modal encoder을 뺀 형태에서 단순히 video 와 text의 similarity만 얻도록 설계된 모델이다.
+그러나 prompter은 메인 모델과는 다르게 random 하게 crop된 video 의 일부분만을 input으로 넘겨준다.
+또한 sentence 부분에서도 다채로운 입력을 주는 것이 아닌, 등장 빈도가 높은 몇천개의 noun을 선정의하여 input으로 넘겨준다
+
+
+
+
+***4 different Proxy task!***
+
+이 논문이 Pre-training을 위해 사용한 Proxy task 는 총 4개이다.
+비디오와 문장이 일치하는지를 확인하는 Video Text Matching, 문장을 기반으로 다른 문장을 예측하는 Masked language modeling, Video 와 text 사이의 contrastive learning, 그리고 이 논문에서 새롭게 제시하는 Prompting Entity Modeling. 
+video-text matching 과 masked language modeling 은 기존에 많이 사용되었던 방법들이니 아래 논문을 참조하는 것이 좋을듯!
+[HERO](https://arxiv.org/abs/2005.00200)
+[BERT](https://arxiv.org/abs/1810.04805)
+
+이 논문에서 contribution을 주장한 Video-Contrastive learning 또 사실 novelty가 빤짝이는 부분은 아니다. 이 논문이 아카이브에 처음 올라온게 2021년인데, 이미 contrastive learning을 사용한 [MIL_NCE](https://www.di.ens.fr/willow/research/mil-nce/)가 널리 인용되고 있었기에..
+저자는Video 와 text 의 CLS token을 기반으로 Contrastive learning을 진행한다. 
+이는 Training phase에서 한 batch에 대해, match 되는 video-sentence pair 을 positive라고 보고, 그 이외 나머지 batch 정보를 negative라고 보며 그 관계를 비교하는 방식인데, 결론적으로 수식을 잘 보면 positive, 즉 video 와 sentence 사이의 거리는 줄어들게 되고 negative, 비디오와 맞지 않는 sentence 혹은 그 반대 경우, sentence 와 맞지 않는 video가 멀어지게 된다는 것이다.
+
+여기서 중요한 것은, prompter이 딱 video-contrastive learning 까지만 진행한다는 것이다!
+비디오의 일부분, random하게 crop 된 patch 와 미리 정의된 noun dictionary 들의 거리를 VTC로 학습하여, 각 patch 에 대해 가장 잘 일치할 것으로 예상되는 pseudo-label을 뽑아낸다는 것이 prompter의 이상적인 역할이 된다.
+
+이 다음이 이제 이 논문의 핵심 contribution이 되는데, prompter 이 뽑아낸 psudo-label 을 기반으로 메인 모델이 학습한다는 것이다.
+모든 Video 의 frame patch 에 대해서...즉 한 비디오 당 prompter은 number_of_patches의 size 만큼 pseudo-label을 뽑으며, 메인 모델이 pseudo-label과 같은 결과를 뽑도록 학습하는 것이다. 이를 논문은 prompting entity modeling이라고 부른다.
+
+솔직히 prompter 의 input이 random하게 crop되는 것이고, 딱히 그 random-crop 부분에 VTC를 할 때 Ground-truth label 에 해당되는 정보가 들어있을 것이란 보장이 없어서 실제로 이를 응용하기는 까다롭지 않을까..? 란 생각이 자연스럽게 드는데, 과연 그런지 아래 results table에서 확인하도록 하겠다.
+
+
 
 **3. Results overview :**
+***Experimental results on 4 losses***
+![Exp_resutls](/img/Prompt/4loss.png)
+이 논문이 target 한 영역의 핵심은 video-language를 학습하는 pre-training 이었고, pre-training이 잘 되었는지 확인해보려면 학습된 model을 기반으로 여러 down-stream task 에 적용해보면 된다.
+이 논문은 한 문장에 대해 여러 비디오와 비교하였을 때 해당하는 문장의 내용을 담고 있을 비디오를 찾거나, 그 반대로 한 비디오에 대해 여러 문장을 주고 가장 일치하는 문장을 찾는 video-retrieval에 대한 실험결과 및 한 비디오를 주고 질의에 대답하는 Video-QA task로 pre-training model 의 effectiveness를 보인다.
+
+위 논문에서 보면, 기존에 많이 사용하던 MLM(Masked Language Modeling) 및 VTM(Video Text Matching)만 단독으로 사용하였을 경우와 VTC, PEM을 각각 추가한 결과들을 비교하였을 때 성능 향상을 보였다.
+그러나 MLM+VTM에서 VTC를 추가한 것이 PEM 보다 훨씬 더 높은 성능 향상을 보였으며, MLM+VTM+VTC에 PEM을 추가하였을 경우 성능 향상을 확인할 수는 있었는데...사실 엄청 큰 성능 향상이라고 말하긴 애매한 감이 없잖아 있다.
+PEM이 과연 정말 좋은 것일까..?
+
+추가적으로, 이 논문에서 정말 재밌는 ablation study 가 있어 소개하고자 한다.
+아래 Table은 Prompter을 학습시킬 때 들어가는 고빈도의 Noun dictionary 모음의 형태를 달리했을 때를 의미한다.
+예를 들어, Dog, Girl 등이 들어있는 dictionary를 의미하는데, W/O Ens 는 저 noun에 대해 그냥 그대로 input으로 넣어줬을 경우이며, with ens 는 저 noun을 "A video of NOUN" 으로 구성한 경우를 의미한다.
+의외로 명사 하나를 쓰는 것 보다, 비디오를 구성하는 것이 더 효과가 좋다!!
+그러면 아예 그냥 "A video of dog","A video of girl" 같은 형식으로 문장을 구성하지 말고, 아예 Dog 의 위키피디아 정의를 paragraph embedding으로 갖다박는것도 재밌지 않았을까?
+흠...
+![Exp_resutls](/img/Prompt/ens_abl.png)
