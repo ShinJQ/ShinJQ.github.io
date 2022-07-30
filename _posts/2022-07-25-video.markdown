@@ -10,7 +10,7 @@ categories: [CVPR22]
 
 **1. Concept :**
 
-***Field : Video_Language Pre-training ***
+***Field : Video_Language Pre-training***
 비디오는 너무나도 복잡한 정보들로 구성되어 있기에, 이걸 학습하는것도 매우 어렵긴 한데.. 학습한 사실을 표현하는 것 또한 큰 문제로 자리잡았다.
 비디오 안에 내재되어 있을 법한 정보들이 너무나도 다양한데, 기존의 분류나 회귀같은 Numeric 한 methods 들은 이를 표현해내기엔 너무 부족하기 때문.
 
@@ -49,7 +49,7 @@ Video-Language 의 Multi-modality 관련 Task 는 총 3가지로 나눌 수 있�
 이 논문은 새로운 Proxy task를 제시하는것이 핵심이기에, 모델에 대한 설명과 4개의 Loss 에 대한 설명으로 나눌 수 있다.
 
 
-***2 independent model ***
+***2 independent model***
 
 이 모델은 2개의 독립적인 모델로 구성되어 있다.
 메인 모델은 비디오를 직접 이해하고 자연어와의 관계를 학습할 Video-language pre-training model 이며, 다른 하나는 메인 모델에게 정보를 제공하기 위해 Pseudo-label, 즉 가상의 라벨링을 하기 위한 Prompter 모델이다.
