@@ -22,7 +22,8 @@ import {
   change BASE_PATH to "/portfolio/".
 */
 const BASE_PATH = "/";
-const CV_PATH = "cv/JungKyoo_Shin_CV.pdf";
+const CV_PATH = "cv/Shin_JungKyoo_CV.pdf";
+const PROFILE_IMAGE_PATH = "profile/jungkyoo_shin.jpg";
 
 function normalizeBasePath(basePath) {
   if (!basePath || basePath === ".") return "/";
@@ -96,6 +97,16 @@ function runSelfTests() {
       expected: `${normalizeBasePath(BASE_PATH)}figures/calm_cvpr2025.png`,
       label: "asset path join",
     },
+    {
+      actual: asset(PROFILE_IMAGE_PATH),
+      expected: `${normalizeBasePath(BASE_PATH)}profile/jungkyoo_shin.jpg`,
+      label: "profile image asset path",
+    },
+    {
+      actual: asset(CV_PATH),
+      expected: `${normalizeBasePath(BASE_PATH)}cv/Shin_JungKyoo_CV.pdf`,
+      label: "cv asset path",
+    },
   ];
 
   cases.forEach(({ actual, expected, label }) => {
@@ -122,7 +133,8 @@ const publications = [
     visual: "Class probability distributions for multimodal semantic alignment",
     figure: "figures/calm_cvpr2025.png",
     links: {
-      paper: "https://openaccess.thecvf.com/content/CVPR2025/html/Shin_Generative_Modeling_of_Class_Probability_for_Multi-Modal_Representation_Learning_CVPR_2025_paper.html",
+      paper:
+        "https://openaccess.thecvf.com/content/CVPR2025/html/Shin_Generative_Modeling_of_Class_Probability_for_Multi-Modal_Representation_Learning_CVPR_2025_paper.html",
       code: "",
       project: "",
       bibtex: "",
@@ -198,7 +210,8 @@ const publications = [
     visual: "Structure-faithful instance unlearning",
     figure: "figures/stake_cvpr2026.png",
     links: {
-      paper: "https://openaccess.thecvf.com/content/CVPR2026/html/Hong_Stake_the_Points_Structure-Faithful_Instance_Unlearning_CVPR_2026_paper.html",
+      paper:
+        "https://openaccess.thecvf.com/content/CVPR2026/html/Hong_Stake_the_Points_Structure-Faithful_Instance_Unlearning_CVPR_2026_paper.html",
       code: "",
       project: "",
       bibtex: "",
@@ -212,7 +225,7 @@ const publications = [
     selected: false,
     featured: false,
     links: {
-      paper: "https://www.sciencedirect.com/science/article/pii/S0893608025009670",
+      paper: "https://www.sciencedirect.com/science/article/pii/S0167865525002292",
       code: "",
       project: "",
       bibtex: "",
@@ -339,16 +352,6 @@ const keywords = [
   "Task-Agnostic Model Training",
 ];
 
-const academicProfile = [
-  ["Affiliation", "Ph.D. Candidate, Department of Artificial Intelligence, Chung-Ang University"],
-  ["Advisor", "Prof. Eunwoo Kim"],
-  [
-    "Dissertation",
-    "Bridging Multi-Level Video-Language Mismatch via Semantic and Temporal Representations",
-  ],
-  ["Education", "M.S. at UST / ETRI; B.S. at Dongguk University"],
-];
-
 const others = [
   {
     title: "Short Bio",
@@ -462,8 +465,10 @@ function Hero() {
             Chung-Ang University
           </p>
 
-          <h1 className="max-w-4xl text-4xl font-semibold tracking-tight text-slate-950 md:text-6xl">
-            Multimodal understanding for real-world knowledge and action.
+          <h1 className="max-w-4xl text-5xl font-semibold tracking-tight text-slate-950 md:text-7xl">
+            <span className="block">Multimodal</span>
+            <span className="block">understanding for</span>
+            <span className="block">real-world knowledge.</span>
           </h1>
 
           <p className="mt-6 max-w-3xl text-base leading-7 text-slate-600 md:text-lg">
@@ -475,7 +480,7 @@ function Hero() {
 
           <div className="mt-8 flex flex-wrap gap-3">
             <a
-              href="mailto:neo293@naver.com"
+              href="mailto:neo293@cau.ac.kr"
               className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-5 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-slate-800"
             >
               <Mail size={16} /> Contact
@@ -505,20 +510,27 @@ function Hero() {
           transition={{ duration: 0.45, delay: 0.1 }}
           className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/60"
         >
-          <div className="mb-5 flex items-center gap-2 text-sm text-slate-500">
-            <MapPin size={16} /> Seoul, South Korea
+          <div className="overflow-hidden rounded-3xl border border-slate-200 bg-slate-50">
+            <img
+              src={asset(PROFILE_IMAGE_PATH)}
+              alt="Portrait of JungKyoo Shin"
+              className="h-80 w-full object-cover object-center"
+              loading="lazy"
+            />
           </div>
 
-          <h3 className="text-lg font-semibold text-slate-950">Academic Profile</h3>
-          <div className="mt-4 space-y-3 rounded-3xl bg-slate-50 p-5">
-            {academicProfile.map(([label, value]) => (
-              <div key={label}>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
-                  {label}
-                </p>
-                <p className="mt-1 text-sm leading-5 text-slate-700">{value}</p>
-              </div>
-            ))}
+          <div className="mt-5 space-y-3 text-sm text-slate-600">
+            <div className="flex items-center gap-2">
+              <MapPin size={16} />
+              <span>Seoul, South Korea</span>
+            </div>
+            <a
+              href="mailto:neo293@cau.ac.kr"
+              className="flex items-center gap-2 transition hover:text-slate-950"
+            >
+              <Mail size={16} />
+              <span>neo293@cau.ac.kr</span>
+            </a>
           </div>
 
           <h3 className="mt-8 text-lg font-semibold text-slate-950">Research Keywords</h3>
@@ -595,7 +607,7 @@ function PublicationCard({ pub, compact = false }) {
             <img
               src={asset(pub.figure)}
               alt={`${pub.title} representative figure`}
-              className="h-44 w-full object-cover transition duration-300 group-hover:scale-[1.02]"
+              className="h-44 w-full object-contain bg-white p-2 transition duration-300 group-hover:scale-[1.02]"
               loading="lazy"
             />
           ) : (
@@ -667,9 +679,9 @@ function ProjectCard({ project }) {
   );
 }
 
-function OthersSection() {
+function OthersSection({ standalone = false }) {
   return (
-    <section className="mt-16 border-t border-slate-200 pt-14">
+    <section className={standalone ? "" : "mt-16 border-t border-slate-200 pt-14"}>
       <SectionTitle
         eyebrow="Others"
         title="Additional academic activities"
@@ -822,7 +834,7 @@ function ProjectsPage() {
 function OthersPage() {
   return (
     <main className="mx-auto max-w-6xl px-5 py-14">
-      <OthersSection />
+      <OthersSection standalone />
     </main>
   );
 }
