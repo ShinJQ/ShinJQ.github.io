@@ -22,7 +22,7 @@ import {
   change BASE_PATH to "/portfolio/".
 */
 const BASE_PATH = "/";
-const CV_PATH = "cv/Shin_JungKyoo_CV.pdf";
+const CV_PATH = "cv/JungKyoo_Shin_CV.pdf";
 
 function normalizeBasePath(basePath) {
   if (!basePath || basePath === ".") return "/";
