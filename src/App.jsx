@@ -320,7 +320,7 @@ const projects = [
 
 const education = [
   {
-    period: "Mar. 2022 - Present",
+    period: "2022 - Present",
     degree: "Ph.D. Candidate in Artificial Intelligence",
     school: "Chung-Ang University",
     advisor: "Prof. Eunwoo Kim",
@@ -328,14 +328,14 @@ const education = [
       "Bridging Multi-Level Video-Language Mismatch via Semantic and Temporal Representations",
   },
   {
-    period: "Mar. 2019 - Feb. 2021",
+    period: "2019 - 2021",
     degree: "M.S. in Information Communication Technology",
     school: "University of Science and Technology / ETRI",
     advisor: "Prof. Jinyoung Moon",
     thesis: "Cross-modal Interaction Based Temporal Moment Localization in a Video",
   },
   {
-    period: "Mar. 2017 - Feb. 2019",
+    period: "2017 - 2019",
     degree: "B.S. in Information and Communication Engineering & Bioinformatics",
     school: "Dongguk University",
     advisor: "",
@@ -353,13 +353,6 @@ const keywords = [
 ];
 
 const others = [
-  {
-    title: "Short Bio",
-    items: [
-      "Researcher in multimodal understanding and robot learning.",
-      "My research investigates contextual understanding across images, videos, and natural language, with an emphasis on learning frameworks that can generalize beyond a single task and apply knowledge to real-world decision-making and action.",
-    ],
-  },
   {
     title: "Teaching Experiences",
     items: [
@@ -471,12 +464,27 @@ function Hero() {
             <span className="block">real-world knowledge.</span>
           </h1>
 
-          <p className="mt-6 max-w-3xl text-base leading-7 text-slate-600 md:text-lg">
-            I study how knowledge can be acquired, structured, and utilized from multimodal data.
-            My research focuses on contextual understanding across images, videos, and natural
-            language for semantic alignment, temporal reasoning, robot task planning, and
-            task-agnostic model training.
-          </p>
+<p className="mt-6 max-w-3xl text-base leading-7 text-slate-600 md:text-lg">
+  I am interested in how knowledge can be acquired,{" "}
+  <strong className="font-semibold text-slate-950">structured</strong>, and utilized
+  from <strong className="font-semibold text-slate-950">multimodal data</strong>.
+  My research focuses on{" "}
+  <strong className="font-semibold text-slate-950">
+    structuring contextual information
+  </strong>{" "}
+  across images, videos, and natural language into{" "}
+  <strong className="font-semibold text-slate-950">semantic</strong>,{" "}
+  <strong className="font-semibold text-slate-950">temporal</strong>, and{" "}
+  <strong className="font-semibold text-slate-950">task-level representations</strong>.
+  Through this perspective, I have studied diverse tasks including video retrieval,
+  captioning, question answering, temporal moment localization, instance unlearning,
+  and robot task planning. My long-term goal is to develop{" "}
+  <strong className="font-semibold text-slate-950">
+    task-agnostic learning frameworks
+  </strong>{" "}
+  that enable AI systems to understand complex real-world observations, organize
+  acquired knowledge, and apply it to practical decision-making and action.
+</p>
 
           <div className="mt-8 flex flex-wrap gap-3">
             <a
@@ -685,7 +693,7 @@ function OthersSection({ standalone = false }) {
       <SectionTitle
         eyebrow="Others"
         title="Additional academic activities"
-        description="Teaching, invited talks, academic services, patent, and short bio."
+        description="Teaching, invited talks, academic services and international patent."
       />
 
       <div className="space-y-8">
@@ -801,7 +809,7 @@ function AcademicContributions() {
       </div>
 
       <section className="mt-16">
-        <SectionTitle eyebrow="Full Publications" title="Additional publications" />
+        <SectionTitle eyebrow="Academic Contributions" title="Full Publications" />
 
         <div className="grid gap-4 md:grid-cols-2">
           {full.map((publication) => (
