@@ -205,7 +205,7 @@ const publications = [
 
 const projects = [
   {
-    title: "ETRI DeepView",
+    title: "ETRI deepView",
     period: "2019–2021",
     subtitle: "High-Performance Visual Discovery Platform",
     icon: Cpu,
